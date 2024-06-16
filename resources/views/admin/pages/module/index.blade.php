@@ -53,7 +53,9 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr></tr>
+                                <tr>
+                                    <td>No Module Found Yet!</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
