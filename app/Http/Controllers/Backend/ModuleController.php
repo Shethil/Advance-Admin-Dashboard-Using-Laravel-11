@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ModuleStoreRequest;
 use App\Models\Module;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class ModuleController extends Controller
@@ -15,6 +16,7 @@ class ModuleController extends Controller
      */
     public function index()
     {
+        Gate::authorize('index-module');
         $modules = Module::select(['id', 'module_name', 'module_slug', 'updated_at'])->latest()->get();
         // return $modules;
         return view('admin.pages.module.index', compact('modules'));
@@ -25,6 +27,7 @@ class ModuleController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create-module');
         return view('admin.pages.module.create');
     }
 
@@ -33,8 +36,7 @@ class ModuleController extends Controller
      */
     public function store(ModuleStoreRequest $request)
     {
-        // dd($request->all());
-
+        Gate::authorize('create-module');
         Module::updateOrCreate([
             'module_name' => $request->module_name,
             'module_slug' => Str::slug($request->module_name),
@@ -57,6 +59,7 @@ class ModuleController extends Controller
      */
     public function edit(string $id)
     {
+        Gate::authorize('edit-module');
         $module = Module::find($id);
         return view('admin.pages.module.edit', compact('module'));
     }
@@ -66,8 +69,8 @@ class ModuleController extends Controller
      */
     public function update(ModuleStoreRequest $request, string $id)
     {
+        Gate::authorize('edit-module');
         $module = Module::find($id);
-
         $module->update([
             'module_name' => $request->module_name,
             'module_slug' => Str::slug($request->module_name),
@@ -82,10 +85,9 @@ class ModuleController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('delete-module');
         $module = Module::find($id);
-
         $module->delete();
-
         Toastr::success('Module Delete Successfully');
         return redirect()->route('module.index');
     }

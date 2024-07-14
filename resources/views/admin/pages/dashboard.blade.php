@@ -5,7 +5,7 @@
 @endpush
 
 @section('admin_content')
-    <h1>Welcome SA404</h1>
+    <h1>Welcome {{ Auth::user()->name }}</h1>
 @endsection
 
 @push('admin_script')

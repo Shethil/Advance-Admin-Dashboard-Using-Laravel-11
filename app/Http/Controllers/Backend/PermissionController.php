@@ -7,6 +7,7 @@ use App\Http\Requests\PermissionRequest;
 use App\Models\Module;
 use App\Models\Permission;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class PermissionController extends Controller
@@ -16,10 +17,10 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        Gate::authorize('index-permission');
         $permissions = Permission::with(['module:id,module_name,module_slug'])
             ->select(['id', 'module_id', 'permission_name', 'permission_slug', 'updated_at'])
             ->latest()
-        // ->paginate();
             ->get();
 
         return view('admin.pages.permission.index', compact('permissions'));
@@ -30,6 +31,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create-permission');
         $modules = Module::select(['id', 'module_name'])->get();
         // dd($modules);
         return view('admin.pages.permission.create', compact('modules'));
@@ -40,6 +42,7 @@ class PermissionController extends Controller
      */
     public function store(PermissionRequest $request)
     {
+        Gate::authorize('create-permission');
         Permission::updateOrCreate([
             'module_id' => $request->module_id,
             'permission_name' => $request->permission_name,
@@ -63,6 +66,7 @@ class PermissionController extends Controller
      */
     public function edit(string $id)
     {
+        Gate::authorize('edit-permission');
         $permission = Permission::find($id);
         $modules = Module::select(['id', 'module_name'])->get();
         return view('admin.pages.permission.edit', compact('modules', 'permission'));
@@ -73,6 +77,7 @@ class PermissionController extends Controller
      */
     public function update(PermissionRequest $request, string $id)
     {
+        Gate::authorize('edit-permission');
         $permission = Permission::find($id);
 
         $permission->update([
@@ -90,6 +95,7 @@ class PermissionController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('delete-permission');
         $permission = Permission::find($id);
 
         $permission->delete();

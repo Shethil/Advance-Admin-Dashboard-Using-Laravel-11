@@ -13,6 +13,7 @@ class Module extends Model
 
     protected $guarded = ['id'];
 
+    /*relationship with permissions */
     public function permissions()
     {
         return $this->hasMany(Permission::class);
