@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         Gate::authorize('index-user');
         $users = User::with(['role:id,role_name,role_slug'])
-            ->select(['id', 'role_id', 'name', 'email', 'updated_at', 'is_active'])
+            ->select(['id', 'role_id', 'name', 'email', 'updated_at', 'is_active','user_image'])
             ->latest()
             ->paginate();
         return view('admin.pages.users.index', compact('users'));
@@ -100,7 +100,12 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         Gate::authorize('delete-user');
-        User::find($id)->delete();
+        $user = User::find($id);
+        if ($user->user_image != null) {
+            $old_photo_path = 'public/uploads/profile_images/' . $user->user_image;
+            unlink(base_path($old_photo_path));
+        }
+        $user->delete();
         Toastr::success('User Deleted Successfully');
         return redirect()->route('users.index');
     }

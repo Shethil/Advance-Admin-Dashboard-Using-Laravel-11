@@ -19,6 +19,7 @@
                         <thead>
                             <tr>
                                 <th>SI</th>
+                                <th>User Image</th>
                                 <th>User Name</th>
                                 <th>Role</th>
                                 <th>User Email</th>
@@ -31,6 +32,15 @@
                             @forelse ($users as $user)
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
+                                    <td class="text-center">
+                                        @if ($user->user_image)
+                                            <img src="{{ asset('uploads/profile_images/') }}/{{ $user->user_image }}" alt
+                                                class="w-px-40 h-auto rounded-circle" />
+                                        @else
+                                            <img src="{{ asset('admin') }}/assets/img/avatars/1.png" alt
+                                                class="w-px-40 h-auto rounded-circle" />
+                                        @endif
+                                    </td>
                                     <td>{{ $user->name }} </td>
                                     <td>{{ $user->role->role_name }} </td>
                                     <td>{{ $user->email }} </td>

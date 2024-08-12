@@ -33,6 +33,10 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('/users', UserController::class);
     Route::get('check/user/is_active/{user_id}', [UserController::class, 'checkActive'])->name('user.is_active.ajax');
 
+    // Profile Management Routes
+    Route::get('update-profile', [ProfileController::class, 'getUpdateeProfile'])->name('getupdate.profile');
+    Route::post('update-profile', [ProfileController::class, 'updateProfile'])->name('postupdate.profile');
+
 });
 
 require __DIR__ . '/auth.php';
