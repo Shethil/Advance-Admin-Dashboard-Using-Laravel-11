@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use App\Http\Requests\ProfilePasswordChangeRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 class ProfileController extends Controller
 {
@@ -65,17 +68,53 @@ class ProfileController extends Controller
 
     public function getUpdateeProfile()
     {
+        Gate::authorize('profile-update');
         $authuser = Auth::user();
         return view('admin.pages.profile.update-profile', compact('authuser'));
     }
 
     public function updateProfile(ProfileStoreRequest $request)
     {
+        Gate::authorize('profile-update');
         $user = User::whereEmail($request->email)->first();
         $this->image_upload($request, $user->id);
         Toastr::success('Profile Updated Successfully!!');
         return back();
     }
+
+    public function getUpdatePassword(){
+        Gate::authorize('password-update');
+        return view('admin.pages.profile.update-password');
+    }
+
+    public function updatePassword(ProfilePasswordChangeRequest $request){
+
+        // dd($request->all());
+            Gate::authorize('password-update');
+            $user = Auth::user();
+            $hashedPassword = $user->password;
+
+            // existing password === request password
+            if(Hash::check($request->old_password, $hashedPassword)){
+
+                // new password == old stored passowrd
+                if(!Hash::check($request->password, $hashedPassword)){
+                    $user->update([
+                        'password' => Hash::make($request->password),
+                    ]);
+
+                Auth::logout();
+                Toastr::success('password updated successfully');
+                return redirect()->route('login');
+                }else{
+                    Toastr::error('New Password cannot be the same as old password');
+                    return back();
+                }
+            }else{
+                Toastr::error("Credentials doesn't match");
+                return back();
+            }
+        }
 
     public function image_upload($request, $user_id)
     {

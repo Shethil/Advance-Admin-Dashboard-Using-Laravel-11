@@ -37,6 +37,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('update-profile', [ProfileController::class, 'getUpdateeProfile'])->name('getupdate.profile');
     Route::post('update-profile', [ProfileController::class, 'updateProfile'])->name('postupdate.profile');
 
+    Route::get('update-password', [ProfileController::class, 'getUpdatePassword'])->name('getupdate.password');
+    Route::post('update-password', [ProfileController::class, 'updatePassword'])->name('postupdate.password');
+
 });
 
 require __DIR__ . '/auth.php';
