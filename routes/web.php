@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\ModuleController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\PageController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -30,6 +31,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('/module', ModuleController::class);
     Route::resource('/permission', PermissionController::class);
     Route::resource('/role', RoleController::class);
+    Route::resource('/page', PageController::class);
+    Route::get('check/page/is_active/{page_id}', [PageController::class, 'checkActive'])->name('page.is_active.ajax');
+
     Route::resource('/users', UserController::class);
     Route::get('check/user/is_active/{user_id}', [UserController::class, 'checkActive'])->name('user.is_active.ajax');
 
