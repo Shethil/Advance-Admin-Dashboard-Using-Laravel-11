@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\PageController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('{page_slug}', [FrontendController::class, 'index']);
+Route::get('page/{page_slug}', [FrontendController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,6 +37,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('/role', RoleController::class);
     Route::resource('/page', PageController::class);
     Route::get('check/page/is_active/{page_id}', [PageController::class, 'checkActive'])->name('page.is_active.ajax');
+    Route::resource('/backup', BackupController::class)->only(['index','store','destroy']);
 
     Route::resource('/users', UserController::class);
     Route::get('check/user/is_active/{user_id}', [UserController::class, 'checkActive'])->name('user.is_active.ajax');
