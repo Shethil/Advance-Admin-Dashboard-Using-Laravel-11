@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\Backend\ModuleController;
-use App\Http\Controllers\Backend\PermissionController;
-use App\Http\Controllers\Backend\RoleController;
-use App\Http\Controllers\Backend\PageController;
-use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\Backend\BackupController;
-use App\Http\Controllers\Frontend\FrontendController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\PageController;
+use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\BackupController;
+use App\Http\Controllers\Backend\ModuleController;
+use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Frontend\FrontendController;
+use App\Http\Controllers\Backend\PermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,6 +50,17 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     Route::get('update-password', [ProfileController::class, 'getUpdatePassword'])->name('getupdate.password');
     Route::post('update-password', [ProfileController::class, 'updatePassword'])->name('postupdate.password');
+
+    // System Setting Management Routes
+    Route::group(['as' =>'settings.', 'prefix' => 'settings'], function(){
+       /*General Setting */
+       Route::get('general', [SettingController::class, 'general'])->name('general');
+       Route::post('general', [SettingController::class, 'generalUpdate'])->name('general.update');
+
+       /*Apperance Setting */
+       Route::get('apperance', [SettingController::class, 'apperance'])->name('apperance');
+       Route::post('apperance', [SettingController::class, 'apperanceUpdate'])->name('apperance.update');
+    });
 
 });
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Setting extends Model
 {
     use HasFactory,SoftDeletes;
-    protected $gurrded = ['id'];
+    protected $guarded = ['id'];
 
     public static function getByName($name, $default=null)
     {
