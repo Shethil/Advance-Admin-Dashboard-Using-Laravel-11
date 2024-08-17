@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\ApperanceUpdateRequest;
 use App\Http\Requests\MailSettingUpdateRequest;
 use App\Http\Requests\GeneralSettingUpdateRequest;
+use App\Http\Requests\SociliteUpdateRequest;
 
 class SettingController extends Controller
 {
@@ -173,5 +174,50 @@ class SettingController extends Controller
         }
 
         file_put_contents($path, $env);
+    }
+
+    public function socialiteView()
+    {
+        Gate::authorize('socialite-setting-view');
+        return view('admin.pages.settings.socialite');
+    }
+    public function socialiteUpdate(SociliteUpdateRequest $request)
+    {
+        Gate::authorize('socialite-setting-update');
+        Setting::updateOrCreate(
+            ['name' => 'git_client_id'],
+            ['value' => $request->git_client_id],
+        );
+        Setting::updateOrCreate(
+            ['name' => 'git_client_secret'],
+            ['value' => $request->git_client_secret],
+        );
+        Setting::updateOrCreate(
+            ['name' => 'git_client_redirect'],
+            ['value' => $request->git_client_redirect],
+        );
+        Setting::updateOrCreate(
+            ['name' => 'google_client_id'],
+            ['value' => $request->google_client_id],
+        );
+        Setting::updateOrCreate(
+            ['name' => 'google_client_secret'],
+            ['value' => $request->google_client_secret],
+        );
+        Setting::updateOrCreate(
+            ['name' => 'google_client_redirect'],
+            ['value' => $request->google_client_redirect],
+        );
+
+        // update env
+        $this->setEnvValue('GITHUB_CLIENT_ID', $request->git_client_id);
+        $this->setEnvValue('GITHUB_CLIENT_SECRET', $request->git_client_secret);
+        $this->setEnvValue('GITHUB_CLIENT_REDIRECT', $request->git_client_redirect);
+        $this->setEnvValue('GOOGLE_CLIENT_ID', $request->google_client_id);
+        $this->setEnvValue('GOOGLE_CLIENT_SECRET', $request->google_client_secret);
+        $this->setEnvValue('GOOGLE_CLIENT_REDIRECT', $request->google_client_redirect);
+
+        Toastr::success('Setting Updated Successfully!!!');
+        return back();
     }
 }
