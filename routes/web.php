@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\PageController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\LoginController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\ModuleController;
@@ -16,6 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('page/{page_slug}', [FrontendController::class, 'index']);
+
+/*Socialite Login Routes*/
+Route::group(['as' => 'login.', 'prefix'=>'login'], function(){
+    Route::get('/{provider}', [LoginController::class, 'redirectToProvider'])->name('provider');
+    Route::get('/{provider}/callback', [LoginController::class, 'handleProviderCallback'])->name('provider.callback');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -64,6 +74,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
        /*Mail Setting */
        Route::get('mail', [SettingController::class, 'mailView'])->name('mail');
        Route::post('mail', [SettingController::class, 'mailUpdate'])->name('mail.update');
+
     });
 
 });
