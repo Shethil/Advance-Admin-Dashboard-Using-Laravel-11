@@ -54,6 +54,7 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+            'timezone' => env('DB_TIMEZONE', '+00:00'),
              'dump' => [
                 'dump_binary_path' => 'C:\xampp\mysql\bin', // only the path where xampp installed or mysqldump
                 /* for server use this thing: 'dump_binary_path' => 'yourdomain/project-name/public' */
