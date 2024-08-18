@@ -15223,6 +15223,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
 .content-wrapper > *,
 .layout-menu {
   min-height: 1px;
+  overflow-y: auto;
 }
 
 .layout-navbar,
